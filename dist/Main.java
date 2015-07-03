@@ -87,6 +87,10 @@ public class Main {
 		/* variáveis dos projéteis lançados pelos inimigos (tanto tipo 1, quanto tipo 2, quanto tipo 3) */
 		InimigoProjectile inimigoProjectile = new InimigoProjectile(new int[200],new double[200],new double[200],new double[200],new double[200],2.0);
 		
+		/* variáveis do powerUp 1 */
+		PowerUp1 powerup1 = new PowerUp1(new int[10],new double [10], new double[10],new double[10],new double[10],new double[10],(long) (GameLib.WIDTH * 0.30));
+	
+		
 		/* estrelas que formam o fundo de primeiro plano */
 
 		ArrayList<PrimeiroPlano> primeiroPlano = new ArrayList<>();
@@ -107,6 +111,7 @@ public class Main {
 		for(int i = 0; i < inimigo1.estados.length; i++) inimigo1.estados[i] = INACTIVE;
 		for(int i = 0; i < inimigo2.estados.length; i++) inimigo2.estados[i] = INACTIVE;
 		for(int i = 0; i < inimigo3.estados.length; i++) inimigo2.estados[i] = INACTIVE;
+		for(int i = 0; i < powerup1.estados.length; i++) powerup1.estados[i] = INACTIVE;
 
 		/* iniciado interface gráfica */
 
@@ -505,6 +510,21 @@ public class Main {
 				}
 			}
 
+			/* Verificando lançamentos de powerUp */
+			if (currentTime > powerup1.nextPower){
+				int free = findFreeIndex(powerup1.estados);
+				
+				if (free < powerup1.estados.length){
+					powerup1.coordenada_x[free] = Math.random() * (GameLib.WIDTH - 30.0) +1.0;
+					powerup1.coordenada_y[free] = -5.0;
+					powerup1.velocidade[free] = 0.10 + Math.random() * 0.05;
+					powerup1.angulo[free] = 3 * Math.PI / 2;
+					powerup1.estados[free]= ACTIVE;
+					powerup1.nextPower = currentTime + 10000;
+				}
+			}
+			
+			
 			/* verificando se novos inimigos (tipo 1) devem ser "lançados" */
 
 			if(currentTime > inimigo1.nextEnemy1){
@@ -633,6 +653,7 @@ public class Main {
 			inimigo1.desenha(currentTime);
 			inimigo2.desenha(currentTime);
 			inimigo3.desenha(currentTime);
+			powerup1.desenha(currentTime);
 
 			GameLib.display();
 
